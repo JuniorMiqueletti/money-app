@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,7 +37,7 @@ public class CategoryController {
 
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public ResponseEntity<Category> create(@RequestBody Category category, HttpServletResponse response) {
+	public ResponseEntity<Category> create(@Valid @RequestBody Category category, HttpServletResponse response) {
 
 		Category created = repo.save(category);
 
