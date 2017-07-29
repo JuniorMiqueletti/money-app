@@ -7,6 +7,7 @@ import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +15,13 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
-public class ExceptionHandler extends ResponseEntityExceptionHandler {
+public class MoneyAppExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@Autowired
 	private MessageSource ms;
@@ -54,6 +57,18 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
 		});
 
 		return errors;
+	}
+	
+	@ExceptionHandler({EmptyResultDataAccessException.class})
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public ResponseEntity<Object> handleEmptyResultDataAcessException(EmptyResultDataAccessException ex, WebRequest request) {
+		
+		String userMessage = ms.getMessage("message.resource.notfound", null, Locale.CANADA);
+		String developerMessage = ex.toString();
+
+		List<Error> errors = Arrays.asList(new Error(userMessage, developerMessage));
+		
+		return handleExceptionInternal(ex, errors, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
 	}
 
 	public static class Error {
