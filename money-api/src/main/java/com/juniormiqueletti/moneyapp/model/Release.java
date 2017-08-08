@@ -30,7 +30,7 @@ public class Release {
 	private LocalDate payDate;
 
 	private BigDecimal value;
-	private String obervation;
+	private String observation;
 
 	@Enumerated(EnumType.STRING)
 	private ReleaseType type;
@@ -83,12 +83,12 @@ public class Release {
 		this.value = value;
 	}
 
-	public String getObervation() {
-		return obervation;
+	public String getObservation() {
+		return observation;
 	}
 
-	public void setObervation(String obervation) {
-		this.obervation = obervation;
+	public void setObservation(String obervation) {
+		this.observation = obervation;
 	}
 
 	public ReleaseType getType() {
