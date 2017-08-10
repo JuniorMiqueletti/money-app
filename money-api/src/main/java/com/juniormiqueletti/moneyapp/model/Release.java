@@ -13,6 +13,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "releases")
@@ -21,26 +25,34 @@ public class Release {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	@NotNull
+	@Size(min = 5, max = 50)
 	private String description;
 
 	@Column(name = "due_date")
+	@NotNull
 	private LocalDate dueDate;
 
 	@Column(name = "pay_date")
 	private LocalDate payDate;
 
+	@NotNull
 	private BigDecimal value;
 	private String observation;
 
 	@Enumerated(EnumType.STRING)
+	@NotNull
 	private ReleaseType type;
 
 	@ManyToOne
 	@JoinColumn(name = "id_category")
+	@NotNull
 	private Category category;
 
 	@ManyToOne
 	@JoinColumn(name = "id_person")
+	@NotNull
 	private Person person;
 
 	public Long getId() {
