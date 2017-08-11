@@ -5,8 +5,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -69,6 +71,17 @@ public class MoneyAppExceptionHandler extends ResponseEntityExceptionHandler {
 		List<Error> errors = Arrays.asList(new Error(userMessage, developerMessage));
 		
 		return handleExceptionInternal(ex, errors, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+	}
+	
+	@ExceptionHandler({DataIntegrityViolationException.class})
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ResponseEntity<Object> handleDataIntegrityConstraintViolationException(DataIntegrityViolationException ex, WebRequest request){
+		String userMessage = ms.getMessage("message.resource.operationnotallowed", null, Locale.CANADA);
+		String developerMessage =  ExceptionUtils.getRootCauseMessage(ex);
+
+		List<Error> errors = Arrays.asList(new Error(userMessage, developerMessage));
+		
+		return handleExceptionInternal(ex, errors, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}
 
 	public static class Error {
