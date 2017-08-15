@@ -37,6 +37,7 @@ public class Release {
 
 	@NotNull
 	private BigDecimal value;
+	
 	private String observation;
 
 	@Enumerated(EnumType.STRING)
