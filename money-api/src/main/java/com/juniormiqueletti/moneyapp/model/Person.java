@@ -6,8 +6,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "person")
@@ -97,6 +100,12 @@ public class Person {
 		} else if (!name.equals(other.name))
 			return false;
 		return true;
+	}
+
+	@JsonIgnore
+	@Transient
+	public boolean isInactive() {
+		return !this.active;
 	}
 
 }

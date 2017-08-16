@@ -30,7 +30,7 @@ public class PersonService {
 		repo.save(savedPerson);
 	}
 
-	private Person findPersonById(Long id) {
+	public Person findPersonById(Long id) {
 		Person savedPerson = repo.findOne(id);
 		
 		if (savedPerson == null) {
