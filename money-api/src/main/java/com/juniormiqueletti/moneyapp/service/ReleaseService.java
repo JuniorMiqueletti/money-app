@@ -26,4 +26,8 @@ public class ReleaseService {
 		}
 		return repository.save(release);
 	}
+
+	public void delete(Long id) {
+		repository.delete(id);
+	}
 }

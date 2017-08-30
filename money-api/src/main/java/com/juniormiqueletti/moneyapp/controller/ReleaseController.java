@@ -12,6 +12,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -57,10 +58,11 @@ public class ReleaseController {
 
 		Release release = repo.findOne(id);
 
-		if (release == null)
+		if (release == null) {
 			return ResponseEntity.notFound().build();
-		else
+		}else {
 			return ResponseEntity.ok(release);
+		}
 	}
 
 	@PostMapping
@@ -84,5 +86,18 @@ public class ReleaseController {
 		List<Error> errors = Arrays.asList(new Error(userMessage, developerMessage));
 
 		return ResponseEntity.badRequest().body(errors);
+	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Object> delete(@PathVariable Long id) {
+
+		Release release = repo.findOne(id);
+
+		if (release == null) {
+			return ResponseEntity.notFound().build();
+		}else {
+			service.delete(id);
+			return ResponseEntity.noContent().build();
+		}
 	}
 }
