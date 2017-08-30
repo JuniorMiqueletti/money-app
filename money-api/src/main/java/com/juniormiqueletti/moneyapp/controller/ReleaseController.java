@@ -25,6 +25,7 @@ import com.juniormiqueletti.moneyapp.event.ResourceCreatedEvent;
 import com.juniormiqueletti.moneyapp.exceptionhandler.MoneyAppExceptionHandler.Error;
 import com.juniormiqueletti.moneyapp.model.Release;
 import com.juniormiqueletti.moneyapp.repository.ReleaseRepository;
+import com.juniormiqueletti.moneyapp.repository.filter.ReleaseFilter;
 import com.juniormiqueletti.moneyapp.service.ReleaseService;
 import com.juniormiqueletti.moneyapp.service.exception.PersonInexistsOrInactiveException;
 
@@ -45,9 +46,9 @@ public class ReleaseController {
 	private MessageSource ms;
 
 	@GetMapping
-	public List<Release> listAll() {
+	public List<Release> findAll(ReleaseFilter filter) {
 
-		List<Release> release = repo.findAll();
+		List<Release> release = repo.filter(filter);
 		return release;
 	}
 
