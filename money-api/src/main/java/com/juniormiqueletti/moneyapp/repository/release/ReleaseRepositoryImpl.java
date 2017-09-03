@@ -11,45 +11,72 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 
 import com.juniormiqueletti.moneyapp.model.Release;
 import com.juniormiqueletti.moneyapp.repository.filter.ReleaseFilter;
 
-public class ReleaseRepositoryImpl implements ReleaseRepositoryQuery{
+public class ReleaseRepositoryImpl implements ReleaseRepositoryQuery {
 
 	@PersistenceContext
 	private EntityManager manager;
-	
+
 	@Override
-	public List<Release> filter(ReleaseFilter filter) {
+	public Page<Release> filter(ReleaseFilter filter, Pageable pageable) {
 		CriteriaBuilder builder = manager.getCriteriaBuilder();
 		CriteriaQuery<Release> criteria = builder.createQuery(Release.class);
 
 		Root<Release> root = criteria.from(Release.class);
-		
-		Predicate[] predicates = createRestriction(filter,builder, root);
+
+		Predicate[] predicates = createRestriction(filter, builder, root);
 		criteria.where(predicates);
-		
+
 		TypedQuery<Release> query = manager.createQuery(criteria);
-		return query.getResultList();
+
+		addPageableRestrictions(query, pageable);
+
+		return new PageImpl<>(query.getResultList(), pageable, getTotalFrom(filter));
 	}
 
 	private Predicate[] createRestriction(ReleaseFilter filter, CriteriaBuilder builder, Root<Release> root) {
-		
+
 		List<Predicate> predicates = new ArrayList<>();
-		
-		if(!StringUtils.isEmpty(filter.getDescription())) {
-			predicates.add(builder.like(
-					builder.lower(root.get("description")), "%" + filter.getDescription().toLowerCase() + "%"
-					));
+
+		if (!StringUtils.isEmpty(filter.getDescription())) {
+			predicates.add(builder.like(builder.lower(root.get("description")),
+					"%" + filter.getDescription().toLowerCase() + "%"));
 		}
-		if(filter.getDueDateFrom() != null) {
+		if (filter.getDueDateFrom() != null) {
 			predicates.add(builder.greaterThanOrEqualTo((root.get("dueDate")), filter.getDueDateFrom()));
 		}
-		if(filter.getDueDateUntil() != null) {
+		if (filter.getDueDateUntil() != null) {
 			predicates.add(builder.lessThanOrEqualTo((root.get("dueDate")), filter.getDueDateFrom()));
 		}
 		return predicates.toArray(new Predicate[predicates.size()]);
+	}
+
+	private void addPageableRestrictions(TypedQuery<Release> query, Pageable pageable) {
+		int actualPage = pageable.getPageNumber();
+		int pageSize = pageable.getPageSize();
+		int firstRegistry = actualPage * pageSize;
+
+		query.setFirstResult(firstRegistry);
+		query.setMaxResults(pageSize);
+	}
+
+	private Long getTotalFrom(ReleaseFilter filter) {
+		CriteriaBuilder builder = manager.getCriteriaBuilder();
+		CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
+
+		Root<Release> root = criteria.from(Release.class);
+		Predicate[] predicates = createRestriction(filter, builder, root);
+
+		criteria.where(predicates);
+		criteria.select(builder.count(root));
+
+		return manager.createQuery(criteria).getSingleResult();
 	}
 }

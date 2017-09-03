@@ -10,6 +10,8 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -47,10 +49,9 @@ public class ReleaseController {
 	private MessageSource ms;
 
 	@GetMapping
-	public List<Release> findAll(ReleaseFilter filter) {
+	public Page<Release> findAll(ReleaseFilter filter, Pageable pageable) {
 
-		List<Release> release = repo.filter(filter);
-		return release;
+		return repo.filter(filter, pageable);
 	}
 
 	@GetMapping("/{id}")
