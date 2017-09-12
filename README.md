@@ -9,15 +9,13 @@
 * Flyway Db Migrator
 * Jackson
 * Apache Commons
+* JWT
 
 #### How to use
 
 ##### Postman tests
- 1. Get client **oauth-tokken** with _basic authentication_.
+ 1. Get client **acess-tokken**_.
 ``` POST: localhost:8080/oauth/token
-Authorization Type : Basic Oauth
-user: angular
-password: @ngul@r
 
 BODY > x-www-form-urlencoded
 
