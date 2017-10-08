@@ -25,12 +25,13 @@ INSERT INTO permission (id_permission, description) values (1, 'ROLE_CREATE_CATE
 INSERT INTO permission (id_permission, description) values (2, 'ROLE_SEARCH_CATEGORY');
 
 INSERT INTO permission (id_permission, description) values (3, 'ROLE_CREATE_PERSON');
-INSERT INTO permission (id_permission, description) values (4, 'ROLE_REMOVER_PERSON');
+INSERT INTO permission (id_permission, description) values (4, 'ROLE_DELETE_PERSON');
 INSERT INTO permission (id_permission, description) values (5, 'ROLE_SEARCH_PERSON');
+INSERT INTO permission (id_permission, description) values (6, 'ROLE_UPDATE_PERSON');
 
-INSERT INTO permission (id_permission, description) values (6, 'ROLE_CREATE_RELEASE');
-INSERT INTO permission (id_permission, description) values (7, 'ROLE_REMOVER_RELEASE');
-INSERT INTO permission (id_permission, description) values (8, 'ROLE_SEARCH_RELEASE');
+INSERT INTO permission (id_permission, description) values (7, 'ROLE_CREATE_RELEASE');
+INSERT INTO permission (id_permission, description) values (8, 'ROLE_DELETE_RELEASE');
+INSERT INTO permission (id_permission, description) values (9, 'ROLE_SEARCH_RELEASE');
 
 -- admin
 INSERT INTO permission_user (id_user, id_permission) values (1, 1);
@@ -41,6 +42,7 @@ INSERT INTO permission_user (id_user, id_permission) values (1, 5);
 INSERT INTO permission_user (id_user, id_permission) values (1, 6);
 INSERT INTO permission_user (id_user, id_permission) values (1, 7);
 INSERT INTO permission_user (id_user, id_permission) values (1, 8);
+INSERT INTO permission_user (id_user, id_permission) values (1, 9);
 
 -- john
 INSERT INTO permission_user (id_user, id_permission) values (2, 2);

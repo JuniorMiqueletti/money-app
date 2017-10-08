@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,12 +50,14 @@ public class ReleaseController {
 	private MessageSource ms;
 
 	@GetMapping
+	@PreAuthorize("hasAuthority('ROLE_SEARCH_RELEASE')")
 	public Page<Release> findAll(ReleaseFilter filter, Pageable pageable) {
 
 		return repo.filter(filter, pageable);
 	}
 
 	@GetMapping("/{id}")
+	@PreAuthorize("hasAuthority('ROLE_SEARCH_RELEASE')")
 	public ResponseEntity<Release> findById(@PathVariable Long id) {
 
 		Release release = repo.findOne(id);
@@ -68,6 +71,7 @@ public class ReleaseController {
 
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
+	@PreAuthorize("hasAuthority('ROLE_CREATE_RELEASE')")
 	public ResponseEntity<Release> create(@Valid @RequestBody Release release, HttpServletResponse response) {
 
 		service.save(release);
@@ -90,6 +94,7 @@ public class ReleaseController {
 	}
 	
 	@DeleteMapping("/{id}")
+	@PreAuthorize("hasAuthority('ROLE_DELETE_RELEASE')")
 	public ResponseEntity<Object> delete(@PathVariable Long id) {
 
 		Release release = repo.findOne(id);

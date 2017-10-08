@@ -8,3 +8,4 @@ db:
         - MYSQL_ROOT_PASSWORD=passmysql
     ports: 
         - 3306:3306
+    container_name: mysql_moneyapp

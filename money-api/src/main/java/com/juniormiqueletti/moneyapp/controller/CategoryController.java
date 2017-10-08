@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,6 +33,7 @@ public class CategoryController {
 	private ApplicationEventPublisher publisher;
 
 	@GetMapping
+	@PreAuthorize("hasAuthority('ROLE_CREATE_CATEGORY')")
 	public List<Category> listAll() {
 
 		List<Category> categories = repo.findAll();
@@ -40,6 +42,7 @@ public class CategoryController {
 
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
+	@PreAuthorize("hasAuthority('ROLE_CREATE_CATEGORY')")
 	public ResponseEntity<Category> create(@Valid @RequestBody Category category, HttpServletResponse response) {
 
 		Category created = repo.save(category);
@@ -50,6 +53,7 @@ public class CategoryController {
 	}
 
 	@GetMapping("/{id}")
+	@PreAuthorize("hasAuthority('ROLE_SEARCH_CATEGORY')")
 	public ResponseEntity<Category> findById(@PathVariable Long id) {
 
 		Category category = repo.findOne(id);
