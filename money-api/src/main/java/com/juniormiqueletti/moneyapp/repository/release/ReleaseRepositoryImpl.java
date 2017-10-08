@@ -11,6 +11,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import com.juniormiqueletti.moneyapp.repository.projection.ReleaseSummary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -41,6 +42,33 @@ public class ReleaseRepositoryImpl implements ReleaseRepositoryQuery {
 		return new PageImpl<>(query.getResultList(), pageable, getTotalFrom(filter));
 	}
 
+	@Override
+	public Page<ReleaseSummary> filterSummary(ReleaseFilter filter, Pageable pageable) {
+		CriteriaBuilder builder = manager.getCriteriaBuilder();
+		CriteriaQuery<ReleaseSummary> criteria = builder.createQuery(ReleaseSummary.class);
+
+		Root<Release> root = criteria.from(Release.class);
+
+		criteria.select(builder.construct(ReleaseSummary.class,
+				root.get("id"),
+				root.get("description"),
+				root.get("dueDate"),
+				root.get("payDate"),
+				root.get("value"),
+				root.get("type"),
+				root.get("category").get("name"),
+				root.get("person").get("name")));
+
+		Predicate[] predicates = createRestriction(filter, builder, root);
+		criteria.where(predicates);
+
+		TypedQuery<ReleaseSummary> query = manager.createQuery(criteria);
+
+		addPageableRestrictions(query, pageable);
+
+		return new PageImpl<>(query.getResultList(), pageable, getTotalFrom(filter));
+	}
+
 	private Predicate[] createRestriction(ReleaseFilter filter, CriteriaBuilder builder, Root<Release> root) {
 
 		List<Predicate> predicates = new ArrayList<>();
@@ -58,7 +86,7 @@ public class ReleaseRepositoryImpl implements ReleaseRepositoryQuery {
 		return predicates.toArray(new Predicate[predicates.size()]);
 	}
 
-	private void addPageableRestrictions(TypedQuery<Release> query, Pageable pageable) {
+	private void addPageableRestrictions(TypedQuery<?> query, Pageable pageable) {
 		int actualPage = pageable.getPageNumber();
 		int pageSize = pageable.getPageSize();
 		int firstRegistry = actualPage * pageSize;
@@ -79,4 +107,6 @@ public class ReleaseRepositoryImpl implements ReleaseRepositoryQuery {
 
 		return manager.createQuery(criteria).getSingleResult();
 	}
+
+
 }

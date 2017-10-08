@@ -7,6 +7,7 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import com.juniormiqueletti.moneyapp.repository.projection.ReleaseSummary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
@@ -54,6 +55,13 @@ public class ReleaseController {
 	public Page<Release> findAll(ReleaseFilter filter, Pageable pageable) {
 
 		return repo.filter(filter, pageable);
+	}
+
+	@GetMapping(params = "summary")
+	@PreAuthorize("hasAuthority('ROLE_SEARCH_RELEASE')")
+	public Page<ReleaseSummary> findSummary(ReleaseFilter filter, Pageable pageable) {
+
+		return repo.filterSummary(filter, pageable);
 	}
 
 	@GetMapping("/{id}")
