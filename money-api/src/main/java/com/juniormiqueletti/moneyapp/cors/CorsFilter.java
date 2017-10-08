@@ -1,5 +1,7 @@
 package com.juniormiqueletti.moneyapp.cors;
 
+import com.juniormiqueletti.moneyapp.config.property.MoneyApiProperty;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -14,7 +16,10 @@ import java.io.IOException;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CorsFilter implements Filter {
 
-    private String originAllowed = "http://localhost:8000";//TODO improve it
+    @Autowired
+    private MoneyApiProperty property;
+
+    private String originAllowed = property.getSourceAllowed();
 
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
 

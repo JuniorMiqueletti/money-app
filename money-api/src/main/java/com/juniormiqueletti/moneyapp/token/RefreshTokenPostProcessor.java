@@ -1,5 +1,7 @@
 package com.juniormiqueletti.moneyapp.token;
 
+import com.juniormiqueletti.moneyapp.config.property.MoneyApiProperty;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -18,6 +20,9 @@ import javax.servlet.http.HttpServletResponse;
 
 @ControllerAdvice
 public class RefreshTokenPostProcessor implements ResponseBodyAdvice<OAuth2AccessToken> {
+
+    @Autowired
+    private MoneyApiProperty property;
 
     @Override
     public boolean supports(MethodParameter methodParameter, Class<? extends HttpMessageConverter<?>> aClass) {
@@ -46,7 +51,7 @@ public class RefreshTokenPostProcessor implements ResponseBodyAdvice<OAuth2Acces
     private void addRefreshTokenOnCookie(HttpServletRequest servletRequest, HttpServletResponse servletResponse, String refreshToken) {
         Cookie refreshTokenCoockie = new Cookie("refreshToken", refreshToken);
         refreshTokenCoockie.setHttpOnly(true);
-        refreshTokenCoockie.setSecure(false);
+        refreshTokenCoockie.setSecure(property.getSeguranca().isEnableHttps());
         refreshTokenCoockie.setPath(servletRequest.getContextPath() + "/oauth/token");
         refreshTokenCoockie.setMaxAge(2592000);
         servletResponse.addCookie(refreshTokenCoockie);
