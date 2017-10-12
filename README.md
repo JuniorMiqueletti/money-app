@@ -1,4 +1,4 @@
-# Money App
+# Money App [![Build Status](https://travis-ci.org/JuniorMiqueletti/money-app-api.svg?branch=master)](https://travis-ci.org/JuniorMiqueletti/money-app-api)
 ## Specs
 * /money-api - Server Side Application
 
