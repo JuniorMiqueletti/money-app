@@ -6,7 +6,12 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -18,17 +23,15 @@ public class CorsFilter implements Filter {
     @Autowired
     private MoneyApiProperty property;
 
-    private String originAllowed = property.getSourceAllowed();
-
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
 
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        response.setHeader("Access-Control-Allow-Origin", originAllowed);
+        response.setHeader("Access-Control-Allow-Origin", property.getSourceAllowed());
         response.setHeader("Access-Control-Allow-Credentials", "true");
 
-        if("OPTIONS".equals(request.getMethod()) && originAllowed.equals(request.getHeader("Origin"))){
+        if("OPTIONS".equals(request.getMethod()) && property.getSourceAllowed().equals(request.getHeader("Origin"))){
 
             response.setHeader("Access-Control-Allow-Methods", "POST, GET, DELETE, PUT, OPTIONS");
             response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, Accept");
@@ -40,11 +43,11 @@ public class CorsFilter implements Filter {
 
     }
 
+    @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
     }
 
+    @Override
     public void destroy() {
-
     }
 }

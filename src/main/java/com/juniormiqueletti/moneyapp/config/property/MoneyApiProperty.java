@@ -2,7 +2,7 @@ package com.juniormiqueletti.moneyapp.config.property;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties("moneyapi")
+@ConfigurationProperties("money-app-api")
 public class MoneyApiProperty {
 
     private String sourceAllowed = "http://localhost:8000";
