@@ -93,7 +93,7 @@ public class ReleaseController {
 
 	@ExceptionHandler({ PersonInexistsOrInactiveException.class })
 	public ResponseEntity<Object> handlePersonInexistsOrInactiveException(PersonInexistsOrInactiveException ex) {
-		String userMessage = ms.getMessage("message.inexistsOrInactive", null, Locale.CANADA);
+		String userMessage = ms.getMessage("message.inexistsOrInactive", null, Locale.US);
 		String developerMessage = ex.toString();
 
 		List<Error> errors = Arrays.asList(new Error(userMessage, developerMessage));
