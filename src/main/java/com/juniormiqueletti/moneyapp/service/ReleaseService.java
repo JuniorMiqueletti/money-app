@@ -1,5 +1,6 @@
 package com.juniormiqueletti.moneyapp.service;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,5 +30,35 @@ public class ReleaseService {
 
 	public void delete(Long id) {
 		repository.delete(id);
+	}
+
+	public Release update(Long id, Release release) {
+		Release releaseSaved = findExistingRelease(id);
+		if (!release.getPerson().equals(releaseSaved.getPerson())) {
+			validatePerson(release);
+		}
+
+		BeanUtils.copyProperties(release, releaseSaved, "id");
+
+		return repository.save(releaseSaved);
+	}
+
+	private void validatePerson(Release release) {
+		Person person = null;
+		if (release.getPerson().getId() != null) {
+			person = personRepository.findOne(release.getPerson().getId());
+		}
+
+		if (person == null || person.isInactive()) {
+			throw new PersonInexistsOrInactiveException();
+		}
+	}
+
+	private Release findExistingRelease(Long id) {
+		Release release = repository.findOne(id);
+		if (release == null) {
+			throw new IllegalArgumentException();
+		}
+		return release;
 	}
 }

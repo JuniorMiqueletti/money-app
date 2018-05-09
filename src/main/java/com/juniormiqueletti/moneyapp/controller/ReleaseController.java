@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -100,7 +101,7 @@ public class ReleaseController {
 
 		return ResponseEntity.badRequest().body(errors);
 	}
-	
+
 	@DeleteMapping("/{id}")
 	@PreAuthorize("hasAuthority('ROLE_DELETE_RELEASE')")
 	public ResponseEntity<Object> delete(@PathVariable Long id) {
@@ -112,6 +113,17 @@ public class ReleaseController {
 		}else {
 			service.delete(id);
 			return ResponseEntity.noContent().build();
+		}
+	}
+
+	@PutMapping("/{id}")
+	@PreAuthorize("hasAuthority('ROLE_CREATE_RELEASE')")
+	public ResponseEntity<Release> update(@PathVariable Long id, @Valid @RequestBody Release release) {
+		try {
+			Release releaseSaved = service.update(id, release);
+			return ResponseEntity.ok(releaseSaved);
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.notFound().build();
 		}
 	}
 }
