@@ -90,7 +90,7 @@ public class PersonController {
 	@PutMapping("/{id}/active")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@PreAuthorize("hasAuthority('ROLE_UPDATE_PERSON')")
-	public void updatePropertyActive(@PathVariable Long id,@RequestBody Boolean active) {
+	public void updatePropertyActive(@PathVariable Long id, @RequestBody Boolean active) {
 		service.updatePropertyActive(id, active);
 	}
 }

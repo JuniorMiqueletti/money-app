@@ -14,6 +14,19 @@
 * Apache Commons
 * JWT
 
+Avaliable profiles:
+
+* "dev" with H2 database to run localy.
+* "prod" with Mysql database.
+* "basic-security" with basic authentication.
+* "oauth-security" with Oauth authentication.
+
+You can user activate two profiles of diferents types.
+
+Ex: "Develpoment and oahth-security"
+
+    -Dspring.profiles.active=dev,oauth-security
+
 #### How to use
 
 ##### Postman tests
