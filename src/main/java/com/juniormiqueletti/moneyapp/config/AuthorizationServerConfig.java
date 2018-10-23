@@ -18,7 +18,6 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 import com.juniormiqueletti.moneyapp.config.token.CustomTokenEnhancer;
 
-@Profile("oauth-security")
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter{
@@ -40,11 +39,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 		TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
-		tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(),acessTokenConverter()));
+		tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), accessTokenConverter()));
 		
 		endpoints
 		  .tokenStore(tokenStore())
-//		  		.accessTokenConverter(acessTokenConverter())
 		  		.tokenEnhancer(tokenEnhancerChain)
 				.reuseRefreshTokens(false)
 		  		.authenticationManager(authenticationManager);
@@ -52,11 +50,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
 	@Bean
 	public TokenStore tokenStore() {
-		return new JwtTokenStore(acessTokenConverter());
+		return new JwtTokenStore(accessTokenConverter());
 	}
 
 	@Bean
-	public JwtAccessTokenConverter acessTokenConverter() {
+	public JwtAccessTokenConverter accessTokenConverter() {
 		JwtAccessTokenConverter accessTokenConverter = new JwtAccessTokenConverter();
 		accessTokenConverter.setSigningKey("moneyAppBackend");
 		return accessTokenConverter;
