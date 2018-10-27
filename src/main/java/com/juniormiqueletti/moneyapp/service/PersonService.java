@@ -8,20 +8,25 @@ import org.springframework.stereotype.Service;
 import com.juniormiqueletti.moneyapp.model.Person;
 import com.juniormiqueletti.moneyapp.repository.PersonRepository;
 
+import java.util.Optional;
+
 @Service
 public class PersonService {
 
-	@Autowired
 	private PersonRepository repo;
 
-	public Person update(Long id, Person person) {
+    @Autowired
+    public PersonService(PersonRepository repo) {
+        this.repo = repo;
+    }
+
+    public Person update(Long id, Person person) {
 
 		Person savedPerson = findPersonById(id); 
 		BeanUtils.copyProperties(person, savedPerson, "id");
 
 		return repo.save(savedPerson);
 	}
-
 
 	public void updatePropertyActive(Long id,Boolean active) {
 		Person savedPerson = findPersonById(id);
@@ -31,11 +36,11 @@ public class PersonService {
 	}
 
 	public Person findPersonById(Long id) {
-		Person savedPerson = repo.findOne(id);
+		Optional<Person> savedPerson = repo.findById(id);
 		
-		if (savedPerson == null) {
+		if (!savedPerson.isPresent()) {
 			throw new EmptyResultDataAccessException(1);
 		}
-		return savedPerson;
+		return savedPerson.get();
 	}
 }

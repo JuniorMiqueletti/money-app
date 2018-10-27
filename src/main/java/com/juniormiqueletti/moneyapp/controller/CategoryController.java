@@ -1,6 +1,7 @@
 package com.juniormiqueletti.moneyapp.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -26,13 +27,19 @@ import com.juniormiqueletti.moneyapp.repository.CategoryRepository;
 @RequestMapping("/category")
 public class CategoryController {
 
-	@Autowired
 	private CategoryRepository repo;
-
-	@Autowired
 	private ApplicationEventPublisher publisher;
 
-	@GetMapping
+	@Autowired
+    public CategoryController(
+        CategoryRepository repo,
+        ApplicationEventPublisher publisher
+    ) {
+        this.repo = repo;
+        this.publisher = publisher;
+    }
+
+    @GetMapping
 	@PreAuthorize("hasAuthority('ROLE_CREATE_CATEGORY')")
 	public List<Category> listAll() {
 
@@ -56,11 +63,11 @@ public class CategoryController {
 	@PreAuthorize("hasAuthority('ROLE_SEARCH_CATEGORY')")
 	public ResponseEntity<Category> findById(@PathVariable Long id) {
 
-		Category category = repo.findOne(id);
+		Optional<Category> category = repo.findById(id);
 
-		if (category == null)
+		if (!category.isPresent())
 			return ResponseEntity.notFound().build();
-		else
-			return ResponseEntity.ok(category);
+
+        return ResponseEntity.ok(category.get());
 	}
 }

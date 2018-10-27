@@ -3,6 +3,7 @@ package com.juniormiqueletti.moneyapp.controller;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -39,19 +40,25 @@ import com.juniormiqueletti.moneyapp.service.exception.PersonInexistsOrInactiveE
 @RequestMapping("/release")
 public class ReleaseController {
 
-	@Autowired
 	private ReleaseRepository repo;
-
-	@Autowired
 	private ReleaseService service;
-
-	@Autowired
 	private ApplicationEventPublisher publisher;
-
-	@Autowired
 	private MessageSource ms;
 
-	@GetMapping
+    @Autowired
+    public ReleaseController(
+        ReleaseRepository repo,
+        ReleaseService service,
+        ApplicationEventPublisher publisher,
+        MessageSource ms
+    ) {
+        this.repo = repo;
+        this.service = service;
+        this.publisher = publisher;
+        this.ms = ms;
+    }
+
+    @GetMapping
 	@PreAuthorize("hasAuthority('ROLE_SEARCH_RELEASE')")
 	public Page<Release> findAll(ReleaseFilter filter, Pageable pageable) {
 
@@ -69,13 +76,12 @@ public class ReleaseController {
 	@PreAuthorize("hasAuthority('ROLE_SEARCH_RELEASE')")
 	public ResponseEntity<Release> findById(@PathVariable Long id) {
 
-		Release release = repo.findOne(id);
+		Optional<Release> release = repo.findById(id);
 
-		if (release == null) {
+		if (!release.isPresent()) {
 			return ResponseEntity.notFound().build();
-		}else {
-			return ResponseEntity.ok(release);
 		}
+        return ResponseEntity.ok(release.get());
 	}
 
 	@PostMapping
@@ -106,14 +112,14 @@ public class ReleaseController {
 	@PreAuthorize("hasAuthority('ROLE_DELETE_RELEASE')")
 	public ResponseEntity<Object> delete(@PathVariable Long id) {
 
-		Release release = repo.findOne(id);
+		Optional<Release> release = repo.findById(id);
 
-		if (release == null) {
+		if (!release.isPresent()) {
 			return ResponseEntity.notFound().build();
-		}else {
-			service.delete(id);
-			return ResponseEntity.noContent().build();
 		}
+
+        service.delete(id);
+        return ResponseEntity.noContent().build();
 	}
 
 	@PutMapping("/{id}")

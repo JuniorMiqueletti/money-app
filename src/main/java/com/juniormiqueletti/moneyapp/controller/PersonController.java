@@ -26,20 +26,28 @@ import com.juniormiqueletti.moneyapp.model.Person;
 import com.juniormiqueletti.moneyapp.repository.PersonRepository;
 import com.juniormiqueletti.moneyapp.service.PersonService;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/person")
 public class PersonController {
 
-	@Autowired
 	private PersonRepository repo;
+    private PersonService service;
+    private ApplicationEventPublisher publisher;
 
-	@Autowired
-	private PersonService service;
+    @Autowired
+    public PersonController(
+        PersonRepository repo,
+        PersonService service,
+        ApplicationEventPublisher publisher
+    ) {
+        this.repo = repo;
+        this.service = service;
+        this.publisher = publisher;
+    }
 
-	@Autowired
-	private ApplicationEventPublisher publisher;
-
-	@GetMapping
+    @GetMapping
 	@PreAuthorize("hasAuthority('ROLE_SEARCH_PERSON')")
 	public Page<Person> find(@RequestParam(required = false, defaultValue = "%") String name, Pageable pageable) {
 
@@ -63,20 +71,20 @@ public class PersonController {
 	@PreAuthorize("hasAuthority('ROLE_SEARCH_PERSON')")
 	public ResponseEntity<Person> findById(@PathVariable Long id) {
 
-		Person person = repo.findOne(id);
+		Optional<Person> person = repo.findById(id);
 
-		if (person == null)
+		if (!person.isPresent())
 			return ResponseEntity.notFound().build();
-		else
-			return ResponseEntity.ok(person);
+
+        return ResponseEntity.ok(person.get());
 	}
 
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@PreAuthorize("hasAuthority('ROLE_SEARCH_PERSON')")
 	public void delete(@PathVariable Long id) {
-		
-		repo.delete(id);
+
+		repo.deleteById(id);
 	}
 	
 	@PutMapping("/{id}")
@@ -91,6 +99,7 @@ public class PersonController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@PreAuthorize("hasAuthority('ROLE_UPDATE_PERSON')")
 	public void updatePropertyActive(@PathVariable Long id, @RequestBody Boolean active) {
+
 		service.updatePropertyActive(id, active);
 	}
 }

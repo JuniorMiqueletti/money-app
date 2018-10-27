@@ -10,30 +10,38 @@ import com.juniormiqueletti.moneyapp.repository.PersonRepository;
 import com.juniormiqueletti.moneyapp.repository.ReleaseRepository;
 import com.juniormiqueletti.moneyapp.service.exception.PersonInexistsOrInactiveException;
 
+import java.util.Optional;
+
 @Service
 public class ReleaseService {
 
-	@Autowired
 	private ReleaseRepository repository;
-
-	@Autowired
 	private PersonRepository personRepository;
 
-	public Release save(Release release) {
+    @Autowired
+    public ReleaseService(
+        ReleaseRepository repository,
+        PersonRepository personRepository
+    ) {
+        this.repository = repository;
+        this.personRepository = personRepository;
+    }
 
-		Person person = personRepository.findOne(release.getPerson().getId());
-		if (person == null || person.isInactive()) {
+    public Release save(final Release release) {
+		Optional<Person> person = personRepository.findById(release.getPerson().getId());
+
+		if (!person.isPresent() || person.get().isInactive())
 			throw new PersonInexistsOrInactiveException();
-		}
+
 		return repository.save(release);
 	}
 
-	public void delete(Long id) {
-		repository.delete(id);
+	public void delete(final Long id) {
+		repository.deleteById(id);
 	}
 
-	public Release update(Long id, Release release) {
-		Release releaseSaved = findExistingRelease(id);
+	public Release update(final Long id, final Release release) {
+        Release releaseSaved = findExistingRelease(id);
 		if (!release.getPerson().equals(releaseSaved.getPerson())) {
 			validatePerson(release);
 		}
@@ -43,22 +51,22 @@ public class ReleaseService {
 		return repository.save(releaseSaved);
 	}
 
-	private void validatePerson(Release release) {
-		Person person = null;
+	private void validatePerson(final Release release) {
+		Optional<Person> person = null;
 		if (release.getPerson().getId() != null) {
-			person = personRepository.findOne(release.getPerson().getId());
+			person = personRepository.findById(release.getPerson().getId());
 		}
 
-		if (person == null || person.isInactive()) {
+		if (!person.isPresent() || person.get().isInactive()) {
 			throw new PersonInexistsOrInactiveException();
 		}
 	}
 
-	private Release findExistingRelease(Long id) {
-		Release release = repository.findOne(id);
-		if (release == null) {
+	private Release findExistingRelease(final Long id) {
+		Optional<Release> release = repository.findById(id);
+		if (!release.isPresent())
 			throw new IllegalArgumentException();
-		}
-		return release;
+
+		return release.get();
 	}
 }
