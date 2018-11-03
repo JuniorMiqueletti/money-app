@@ -141,6 +141,4 @@ public class ReleaseRepositoryImpl implements ReleaseRepositoryQuery {
 
 		return manager.createQuery(criteria).getSingleResult();
 	}
-
-
 }

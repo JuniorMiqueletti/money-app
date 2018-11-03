@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface ReleaseRepositoryQuery {
 
-	public Page<Release> filter(ReleaseFilter filter, Pageable pageable);
-	public Page<ReleaseSummary> filterSummary(ReleaseFilter filter, Pageable pageable);
+	public Page<Release> filter(final ReleaseFilter filter, final Pageable pageable);
+	public Page<ReleaseSummary> filterSummary(final ReleaseFilter filter, final Pageable pageable);
 	public List<StatisticalReleaseCategory> byCategory(final LocalDate referenceMonth);
 }
