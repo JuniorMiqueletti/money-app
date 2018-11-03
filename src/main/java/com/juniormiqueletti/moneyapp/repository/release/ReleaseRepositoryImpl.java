@@ -1,5 +1,6 @@
 package com.juniormiqueletti.moneyapp.repository.release;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import com.juniormiqueletti.moneyapp.controller.dto.StatisticalReleaseCategory;
 import com.juniormiqueletti.moneyapp.repository.projection.ReleaseSummary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -69,7 +71,39 @@ public class ReleaseRepositoryImpl implements ReleaseRepositoryQuery {
 		return new PageImpl<>(query.getResultList(), pageable, getTotalFrom(filter));
 	}
 
-	private Predicate[] createRestriction(ReleaseFilter filter, CriteriaBuilder builder, Root<Release> root) {
+    @Override
+    public List<StatisticalReleaseCategory> byCategory(final LocalDate referenceMonth) {
+	    CriteriaBuilder criteriaBuilder = manager.getCriteriaBuilder();
+
+	    CriteriaQuery<StatisticalReleaseCategory> criteriaQuery =
+            criteriaBuilder.createQuery(StatisticalReleaseCategory.class);
+
+	    Root<Release> root = criteriaQuery.from(Release.class);
+
+	    criteriaQuery.select(
+	        criteriaBuilder.construct(
+	            StatisticalReleaseCategory.class,
+                root.get("category"),
+                criteriaBuilder.sum(root.get("value"))
+            )
+        );
+
+	    LocalDate firstDay = referenceMonth.withDayOfMonth(1);
+	    LocalDate lastDay =  referenceMonth.withDayOfMonth(referenceMonth.lengthOfMonth());
+
+	    criteriaQuery.where(
+	        criteriaBuilder.greaterThanOrEqualTo(root.get("dueDate"), firstDay),
+            criteriaBuilder.lessThanOrEqualTo(root.get("dueDate"), lastDay)
+        );
+
+	    criteriaQuery.groupBy(root.get("category"));
+
+	    TypedQuery<StatisticalReleaseCategory> typedQuery = manager.createQuery(criteriaQuery);
+
+        return typedQuery.getResultList();
+    }
+
+    private Predicate[] createRestriction(ReleaseFilter filter, CriteriaBuilder builder, Root<Release> root) {
 
 		List<Predicate> predicates = new ArrayList<>();
 
