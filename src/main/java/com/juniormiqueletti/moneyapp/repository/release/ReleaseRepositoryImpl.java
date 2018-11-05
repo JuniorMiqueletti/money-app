@@ -117,7 +117,7 @@ public class ReleaseRepositoryImpl implements ReleaseRepositoryQuery {
             criteriaBuilder.construct(
                 StatisticalReleaseDaily.class,
                 root.get("type"),
-                root.get("day"),
+                root.get("dueDate"),
                 criteriaBuilder.sum(root.get("value"))
             )
         );

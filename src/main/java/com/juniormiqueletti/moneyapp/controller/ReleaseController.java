@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import com.juniormiqueletti.moneyapp.controller.dto.StatisticalReleaseCategory;
+import com.juniormiqueletti.moneyapp.controller.dto.StatisticalReleaseDaily;
 import com.juniormiqueletti.moneyapp.repository.projection.ReleaseSummary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -131,5 +132,12 @@ public class ReleaseController {
 	public List<StatisticalReleaseCategory> byCategory(@PathVariable final int year, @PathVariable final int month) {
         LocalDate referenceDate = LocalDate.of(year, month, 1);
         return this.repository.byCategory(referenceDate);
+    }
+
+    @GetMapping("/statistical/by-day/{year}-{month}")
+    @PreAuthorize("hasAuthority('ROLE_SEARCH_RELEASE')")
+    public List<StatisticalReleaseDaily> byDay(@PathVariable final int year, @PathVariable final int month) {
+        LocalDate referenceDate = LocalDate.of(year, month, 1);
+        return this.repository.byDay(referenceDate);
     }
 }
