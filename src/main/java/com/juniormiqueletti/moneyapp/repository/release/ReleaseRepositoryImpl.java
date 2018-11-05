@@ -13,6 +13,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import com.juniormiqueletti.moneyapp.controller.dto.StatisticalReleaseCategory;
+import com.juniormiqueletti.moneyapp.controller.dto.StatisticalReleaseDaily;
 import com.juniormiqueletti.moneyapp.repository.projection.ReleaseSummary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -99,6 +100,42 @@ public class ReleaseRepositoryImpl implements ReleaseRepositoryQuery {
 	    criteriaQuery.groupBy(root.get("category"));
 
 	    TypedQuery<StatisticalReleaseCategory> typedQuery = manager.createQuery(criteriaQuery);
+
+        return typedQuery.getResultList();
+    }
+
+    @Override
+    public List<StatisticalReleaseDaily> byDay(LocalDate referenceMonth) {
+        CriteriaBuilder criteriaBuilder = manager.getCriteriaBuilder();
+
+        CriteriaQuery<StatisticalReleaseDaily> criteriaQuery =
+            criteriaBuilder.createQuery(StatisticalReleaseDaily.class);
+
+        Root<Release> root = criteriaQuery.from(Release.class);
+
+        criteriaQuery.select(
+            criteriaBuilder.construct(
+                StatisticalReleaseDaily.class,
+                root.get("type"),
+                root.get("day"),
+                criteriaBuilder.sum(root.get("value"))
+            )
+        );
+
+        LocalDate firstDay = referenceMonth.withDayOfMonth(1);
+        LocalDate lastDay =  referenceMonth.withDayOfMonth(referenceMonth.lengthOfMonth());
+
+        criteriaQuery.where(
+            criteriaBuilder.greaterThanOrEqualTo(root.get("dueDate"), firstDay),
+            criteriaBuilder.lessThanOrEqualTo(root.get("dueDate"), lastDay)
+        );
+
+        criteriaQuery.groupBy(
+            root.get("type"),
+            root.get("dueDate")
+        );
+
+        TypedQuery<StatisticalReleaseDaily> typedQuery = manager.createQuery(criteriaQuery);
 
         return typedQuery.getResultList();
     }
