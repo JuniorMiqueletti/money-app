@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="releases-by-person" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="867d625e-5263-422d-8c95-2ed09bc85f86">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<title>
+		<band height="50" splitType="Stretch">
+			<staticText>
+				<reportElement x="153" y="11" width="254" height="30" uuid="601b497e-22da-4e23-9a70-508bbebef414"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16"/>
+				</textElement>
+				<text><![CDATA[Releases by person]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="25" backcolor="#E8E8E8" uuid="c292d271-1036-4247-843e-c62c685166b1"/>
+			</rectangle>
+			<line>
+				<reportElement positionType="Float" x="80" y="0" width="1" height="25" uuid="8000e0d4-3125-4e02-a8a4-7b0bcaf665bb"/>
+			</line>
+			<line>
+				<reportElement positionType="Float" x="485" y="0" width="1" height="25" uuid="808a3163-a4a8-4502-8c75-0fcfc3a11218"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="0" width="80" height="25" uuid="6f945e9d-9687-4ae8-88d4-de284cc5edfe"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="82" y="0" width="402" height="25" uuid="c4d98646-2c90-48f5-8ae0-b640f0e4a88b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Person]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="486" y="0" width="69" height="25" uuid="7e729e9f-a5da-41d7-a5d1-37a98f37291a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+</jasperReport>
