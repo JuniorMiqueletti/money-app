@@ -8,22 +8,22 @@
 
 * Java 8
 * Spring Framework _(Boot, Data, Security, Oauth, DevTools, Web)_
-* Mysql
-* Flyway Db Migrator
+* Mysql/ H2
+* Flyway Db Migration
 * Jackson
 * Apache Commons
 * JWT
 
-Avaliable profiles:
+Available profiles:
 
-* "dev" with H2 database to run localy.
+* "dev" with H2 database to run local.
 * "prod" with Mysql database.
 * "basic-security" with basic authentication.
 * "oauth-security" with Oauth authentication.
 
-You can user activate two profiles of diferents types.
+You can user activate two profiles of different types.
 
-Ex: "Develpoment and oahth-security"
+Ex: "Development and oath-security"
 
     -Dspring.profiles.active=dev,oauth-security
 
