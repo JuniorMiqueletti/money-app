@@ -2,9 +2,14 @@
 <!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="releases-by-person" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="867d625e-5263-422d-8c95-2ed09bc85f86">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="DT_START" class="java.util.Date"/>
+	<parameter name="DT_END" class="java.util.Date"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
+	<field name="total" class="java.math.BigDecimal"/>
+	<field name="type" class="com.juniormiqueletti.moneyapp.model.ReleaseType"/>
+	<field name="person" class="com.juniormiqueletti.moneyapp.model.Person"/>
 	<title>
 		<band height="50" splitType="Stretch">
 			<staticText>
@@ -17,9 +22,12 @@
 		</band>
 	</title>
 	<columnHeader>
-		<band height="30" splitType="Stretch">
+		<band height="25" splitType="Stretch">
 			<rectangle>
-				<reportElement x="0" y="0" width="555" height="25" backcolor="#E8E8E8" uuid="c292d271-1036-4247-843e-c62c685166b1"/>
+				<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="555" height="25" backcolor="#E8E8E8" uuid="c292d271-1036-4247-843e-c62c685166b1"/>
+				<graphicElement>
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</graphicElement>
 			</rectangle>
 			<line>
 				<reportElement positionType="Float" x="80" y="0" width="1" height="25" uuid="8000e0d4-3125-4e02-a8a4-7b0bcaf665bb"/>
@@ -45,8 +53,20 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="125" splitType="Stretch">
-			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+		<band height="25" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+			<rectangle>
+				<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="555" height="25" backcolor="#FFFFFF" uuid="38812f2f-b9f5-4cf5-a803-2100ad15d42e"/>
+				<graphicElement>
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</graphicElement>
+			</rectangle>
+			<line>
+				<reportElement x="80" y="0" width="1" height="25" uuid="8b5070dc-af24-447c-ac47-8662ae4d3136"/>
+			</line>
+			<line>
+				<reportElement positionType="Float" mode="Transparent" x="485" y="0" width="1" height="25" uuid="376a4391-8a6b-4b2f-9f60-8528a258bc75"/>
+			</line>
 		</band>
 	</detail>
 	<pageFooter>
