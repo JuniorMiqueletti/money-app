@@ -1,4 +1,4 @@
-package com.juniormiqueletti.moneyapp.controller;
+package com.juniormiqueletti.moneyapp.resource;
 
 import io.restassured.RestAssured;
 import io.restassured.http.Header;
@@ -10,7 +10,7 @@ import java.util.Base64;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class CategoryControllerIT {
+public class CategoryRsIT {
 
     private static final String URL_OAUTH = "/oauth/token";
     private static final String CONTENT_TYPE_HEADER = "Content-Type";

@@ -1,23 +1,23 @@
-package com.juniormiqueletti.moneyapp.controller.dto;
+package com.juniormiqueletti.moneyapp.dto;
 
-import com.juniormiqueletti.moneyapp.model.Person;
 import com.juniormiqueletti.moneyapp.model.ReleaseType;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
-public class StatisticalReleasePerson {
+public class StatisticalReleaseDaily {
 
     private ReleaseType type;
-    private Person person;
+    private LocalDate day;
     private BigDecimal total;
 
-    public StatisticalReleasePerson(
+    public StatisticalReleaseDaily(
         ReleaseType type,
-        Person person,
+        LocalDate day,
         BigDecimal total
     ) {
         this.type = type;
-        this.person = person;
+        this.day = day;
         this.total = total;
     }
 
@@ -29,12 +29,12 @@ public class StatisticalReleasePerson {
         this.type = type;
     }
 
-    public Person getPerson() {
-        return person;
+    public LocalDate getDay() {
+        return day;
     }
 
-    public void setPerson(Person person) {
-        this.person = person;
+    public void setDay(LocalDate day) {
+        this.day = day;
     }
 
     public BigDecimal getTotal() {

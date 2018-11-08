@@ -1,4 +1,4 @@
-package com.juniormiqueletti.moneyapp.controller.dto;
+package com.juniormiqueletti.moneyapp.dto;
 
 import com.juniormiqueletti.moneyapp.model.Category;
 

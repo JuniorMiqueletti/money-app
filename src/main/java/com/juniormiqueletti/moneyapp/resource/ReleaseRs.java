@@ -1,4 +1,4 @@
-package com.juniormiqueletti.moneyapp.controller;
+package com.juniormiqueletti.moneyapp.resource;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -9,8 +9,8 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import com.juniormiqueletti.moneyapp.controller.dto.StatisticalReleaseCategory;
-import com.juniormiqueletti.moneyapp.controller.dto.StatisticalReleaseDaily;
+import com.juniormiqueletti.moneyapp.dto.StatisticalReleaseCategory;
+import com.juniormiqueletti.moneyapp.dto.StatisticalReleaseDaily;
 import com.juniormiqueletti.moneyapp.repository.projection.ReleaseSummary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -32,7 +32,7 @@ import com.juniormiqueletti.moneyapp.service.exception.PersonInexistsOrInactiveE
 
 @RestController
 @RequestMapping("/release")
-public class ReleaseController {
+public class ReleaseRs {
 
 	private ReleaseRepository repository;
 	private ReleaseService service;
@@ -40,7 +40,7 @@ public class ReleaseController {
 	private MessageSource ms;
 
     @Autowired
-    public ReleaseController(
+    public ReleaseRs(
         ReleaseRepository repository,
         ReleaseService service,
         ApplicationEventPublisher publisher,

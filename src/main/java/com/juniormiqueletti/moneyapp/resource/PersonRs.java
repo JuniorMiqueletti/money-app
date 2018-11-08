@@ -1,4 +1,4 @@
-package com.juniormiqueletti.moneyapp.controller;
+package com.juniormiqueletti.moneyapp.resource;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -30,14 +30,14 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/person")
-public class PersonController {
+public class PersonRs {
 
 	private PersonRepository repo;
     private PersonService service;
     private ApplicationEventPublisher publisher;
 
     @Autowired
-    public PersonController(
+    public PersonRs(
         PersonRepository repo,
         PersonService service,
         ApplicationEventPublisher publisher

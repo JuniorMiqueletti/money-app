@@ -1,4 +1,4 @@
-package com.juniormiqueletti.moneyapp.controller;
+package com.juniormiqueletti.moneyapp.resource;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,13 +25,13 @@ import com.juniormiqueletti.moneyapp.repository.CategoryRepository;
 
 @RestController
 @RequestMapping("/category")
-public class CategoryController {
+public class CategoryRs {
 
 	private CategoryRepository repo;
 	private ApplicationEventPublisher publisher;
 
 	@Autowired
-    public CategoryController(
+    public CategoryRs(
         CategoryRepository repo,
         ApplicationEventPublisher publisher
     ) {

@@ -1,4 +1,4 @@
-package com.juniormiqueletti.moneyapp.controller;
+package com.juniormiqueletti.moneyapp.resource;
 
 import com.juniormiqueletti.moneyapp.config.property.MoneyApiProperty;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/tokens")
-public class TokenController {
+public class TokenRs {
 
     @Autowired
     private MoneyApiProperty property;
