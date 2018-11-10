@@ -14,6 +14,7 @@ import javax.persistence.criteria.Root;
 
 import com.juniormiqueletti.moneyapp.dto.StatisticalReleaseCategory;
 import com.juniormiqueletti.moneyapp.dto.StatisticalReleaseDaily;
+import com.juniormiqueletti.moneyapp.dto.StatisticalReleasePerson;
 import com.juniormiqueletti.moneyapp.repository.projection.ReleaseSummary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -29,7 +30,7 @@ public class ReleaseRepositoryImpl implements ReleaseRepositoryQuery {
 	private EntityManager manager;
 
 	@Override
-	public Page<Release> filter(ReleaseFilter filter, Pageable pageable) {
+	public Page<Release> filter(final ReleaseFilter filter, final Pageable pageable) {
 		CriteriaBuilder builder = manager.getCriteriaBuilder();
 		CriteriaQuery<Release> criteria = builder.createQuery(Release.class);
 
@@ -46,7 +47,7 @@ public class ReleaseRepositoryImpl implements ReleaseRepositoryQuery {
 	}
 
 	@Override
-	public Page<ReleaseSummary> filterSummary(ReleaseFilter filter, Pageable pageable) {
+	public Page<ReleaseSummary> filterSummary(final ReleaseFilter filter, final Pageable pageable) {
 		CriteriaBuilder builder = manager.getCriteriaBuilder();
 		CriteriaQuery<ReleaseSummary> criteria = builder.createQuery(ReleaseSummary.class);
 
@@ -105,7 +106,7 @@ public class ReleaseRepositoryImpl implements ReleaseRepositoryQuery {
     }
 
     @Override
-    public List<StatisticalReleaseDaily> byDay(LocalDate referenceMonth) {
+    public List<StatisticalReleaseDaily> byDay(final LocalDate referenceMonth) {
         CriteriaBuilder criteriaBuilder = manager.getCriteriaBuilder();
 
         CriteriaQuery<StatisticalReleaseDaily> criteriaQuery =
@@ -136,6 +137,39 @@ public class ReleaseRepositoryImpl implements ReleaseRepositoryQuery {
         );
 
         TypedQuery<StatisticalReleaseDaily> typedQuery = manager.createQuery(criteriaQuery);
+
+        return typedQuery.getResultList();
+    }
+
+    @Override
+    public List<StatisticalReleasePerson> byPerson(final LocalDate start, final LocalDate end) {
+        CriteriaBuilder criteriaBuilder = manager.getCriteriaBuilder();
+
+        CriteriaQuery<StatisticalReleasePerson> criteriaQuery =
+            criteriaBuilder.createQuery(StatisticalReleasePerson.class);
+
+        Root<Release> root = criteriaQuery.from(Release.class);
+
+        criteriaQuery.select(
+            criteriaBuilder.construct(
+                StatisticalReleasePerson.class,
+                root.get("type"),
+                root.get("person"),
+                criteriaBuilder.sum(root.get("value"))
+            )
+        );
+
+        criteriaQuery.where(
+            criteriaBuilder.greaterThanOrEqualTo(root.get("dueDate"), start),
+            criteriaBuilder.lessThanOrEqualTo(root.get("dueDate"), end)
+        );
+
+        criteriaQuery.groupBy(
+            root.get("type"),
+            root.get("person")
+        );
+
+        TypedQuery<StatisticalReleasePerson> typedQuery = manager.createQuery(criteriaQuery);
 
         return typedQuery.getResultList();
     }
