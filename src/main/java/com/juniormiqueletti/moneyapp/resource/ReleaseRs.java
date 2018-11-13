@@ -12,12 +12,16 @@ import javax.validation.Valid;
 import com.juniormiqueletti.moneyapp.dto.StatisticalReleaseCategory;
 import com.juniormiqueletti.moneyapp.dto.StatisticalReleaseDaily;
 import com.juniormiqueletti.moneyapp.repository.projection.ReleaseSummary;
+import net.sf.jasperreports.engine.JRException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -139,5 +143,21 @@ public class ReleaseRs {
     public List<StatisticalReleaseDaily> byDay(@PathVariable final int year, @PathVariable final int month) {
         LocalDate referenceDate = LocalDate.of(year, month, 1);
         return this.repository.byDay(referenceDate);
+    }
+
+    @GetMapping("/reports/by-person")
+    public ResponseEntity<byte[]> reportByPerson(
+        @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate start,
+        @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate end) throws JRException {
+
+        byte[] report = service.reportByPerson(start, end);
+
+        return ResponseEntity.ok()
+            .header(
+                HttpHeaders.CONTENT_TYPE,
+                MediaType.APPLICATION_PDF_VALUE
+            )
+            .body(report);
+
     }
 }

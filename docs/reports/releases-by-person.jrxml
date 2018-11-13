@@ -18,7 +18,7 @@
 					<font size="18"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Releases by person " + DATEFORMAT($P{DT_START}, "dd/MM/yyyy") + " until " + DATEFORMAT($P{DT_END}, "dd/MM/yyyy")]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Releases by person " + DATEFORMAT($P{DT_START}, "yyyy/MM/dd") + " until " + DATEFORMAT($P{DT_END}, "yyyy/MM/dd")]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -75,7 +75,7 @@
 			<textField>
 				<reportElement stretchType="ElementGroupBottom" x="1" y="0" width="140" height="25" uuid="d84f51fd-db48-4459-929d-176cd4e107f0"/>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA["Date " + DATEFORMAT(TODAY(),"dd/MM/yyyy")]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Date " + DATEFORMAT(TODAY(),"yyyy/MM/dd")]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="455" y="0" width="100" height="25" uuid="4ade2976-6fb0-4450-b486-dcfe9d8b216c"/>
