@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/tokens")
-public class TokenRs {
+public class TokenRS {
 
     @Autowired
     private MoneyApiProperty property;

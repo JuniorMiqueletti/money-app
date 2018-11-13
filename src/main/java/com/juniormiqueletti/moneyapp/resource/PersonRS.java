@@ -30,14 +30,14 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/person")
-public class PersonRs {
+public class PersonRS {
 
 	private PersonRepository repo;
     private PersonService service;
     private ApplicationEventPublisher publisher;
 
     @Autowired
-    public PersonRs(
+    public PersonRS(
         PersonRepository repo,
         PersonService service,
         ApplicationEventPublisher publisher

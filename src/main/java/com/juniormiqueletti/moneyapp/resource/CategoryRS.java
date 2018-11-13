@@ -25,13 +25,13 @@ import com.juniormiqueletti.moneyapp.repository.CategoryRepository;
 
 @RestController
 @RequestMapping("/category")
-public class CategoryRs {
+public class CategoryRS {
 
 	private CategoryRepository repo;
 	private ApplicationEventPublisher publisher;
 
 	@Autowired
-    public CategoryRs(
+    public CategoryRS(
         CategoryRepository repo,
         ApplicationEventPublisher publisher
     ) {

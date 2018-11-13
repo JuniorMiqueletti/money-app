@@ -36,7 +36,7 @@ import com.juniormiqueletti.moneyapp.service.exception.PersonInexistsOrInactiveE
 
 @RestController
 @RequestMapping("/release")
-public class ReleaseRs {
+public class ReleaseRS {
 
 	private ReleaseRepository repository;
 	private ReleaseService service;
@@ -44,7 +44,7 @@ public class ReleaseRs {
 	private MessageSource ms;
 
     @Autowired
-    public ReleaseRs(
+    public ReleaseRS(
         ReleaseRepository repository,
         ReleaseService service,
         ApplicationEventPublisher publisher,
