@@ -1,15 +1,15 @@
 package com.juniormiqueletti.moneyapp.mail;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class Mailer {
@@ -17,14 +17,49 @@ public class Mailer {
     @Autowired
     private JavaMailSender mailSender;
 
-    /* TODO REMOVE Simple test
-    @EventListener
+    @Autowired
+    private TemplateEngine thymeleaf;
+
+    /*TODO REMOVE Simple test
+	@Autowired
+	private ReleaseRepository repo;
+
+	@EventListener
 	private void teste(ApplicationReadyEvent event) {
-		this.sendMail("testes.algaworks@gmail.com",
-				Arrays.asList("juniormiqueletti@gmail.com"),
-				"Testing", "Hello!<br/>Test ok.");
-		System.out.println("Mail service shutdown...");
+		String template = "mail/warn-expired-releases";
+
+		List<Release> list = repo.findAll();
+
+		Map<String, Object> vars = new HashMap<>();
+        vars.put("releases", list);
+
+		this.sendMail(
+		    "juniormiqueletti@gmail.com",
+            Arrays.asList("juniormiqueletti@gmail.com"),
+            "Testing",
+            template,
+            vars
+        );
+
+		System.out.println("Sending mail done...");
 	}*/
+
+    public void sendMail(
+        final String sender,
+        final List<String> recipients,
+        final String subject,
+        final String template,
+        final Map<String, Object> variables
+    ) {
+        Context context = new Context(new Locale("en", "US"));
+
+        variables.entrySet().forEach(
+            p -> context.setVariable(p.getKey(), p.getValue())
+        );
+
+        String message = thymeleaf.process(template, context);
+        this.sendMail(sender, recipients, subject, message);
+    }
 
     public void sendMail(
         final String sender,
