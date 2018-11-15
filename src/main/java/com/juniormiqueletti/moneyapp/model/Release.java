@@ -1,5 +1,7 @@
 package com.juniormiqueletti.moneyapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -53,6 +55,11 @@ public class Release {
 	@JoinColumn(name = "id_person")
 	@NotNull
 	private Person person;
+
+	@JsonIgnore
+	public Boolean isRecipe() {
+	    return this.type.RECIPE.equals(this.type);
+    }
 
 	public Long getId() {
 		return id;

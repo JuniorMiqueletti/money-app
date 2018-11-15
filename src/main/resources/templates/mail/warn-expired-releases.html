@@ -22,7 +22,8 @@
 
     <tbody>
     <tr style="border-bottom: 1px solid #ccc; border-top: 1px solid #ccc;"
-        th:each="release: ${releases}">
+        th:each="release: ${releases}"
+        th:styleappend="${release.recipe} ? 'color: blue;' : 'color: red;'">
         <td th:text="${release.type.description}">Recipe</td>
         <td th:text="${release.person.name}">Junior</td>
         <td th:text="${release.description}">Salary</td>
