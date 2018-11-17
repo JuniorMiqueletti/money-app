@@ -1,6 +1,10 @@
 package com.juniormiqueletti.moneyapp.service;
 
 import com.juniormiqueletti.moneyapp.dto.StatisticalReleasePerson;
+import com.juniormiqueletti.moneyapp.mail.Mailer;
+import com.juniormiqueletti.moneyapp.mail.ReleasesMailer;
+import com.juniormiqueletti.moneyapp.model.User;
+import com.juniormiqueletti.moneyapp.repository.UserRepository;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -27,14 +31,22 @@ public class ReleaseService {
 
 	private ReleaseRepository repository;
 	private PersonRepository personRepository;
+	private UserRepository userRepository;
+	private ReleasesMailer mailer;
+
+	private static final String ROLE = "ROLE_SEARCH_RELEASE";
 
     @Autowired
     public ReleaseService(
         ReleaseRepository repository,
-        PersonRepository personRepository
+        PersonRepository personRepository,
+        UserRepository userRepository,
+        ReleasesMailer mailer
     ) {
         this.repository = repository;
         this.personRepository = personRepository;
+        this.userRepository = userRepository;
+        this.mailer = mailer;
     }
 
     public Release save(final Release release) {
@@ -82,7 +94,15 @@ public class ReleaseService {
 
     @Scheduled(cron = "0 0 6 * * *")
     public void warnExpiredReleases() {
+        List<Release> expireds =
+            repository
+                .findByDueDateLessThanEqualAndPayDateIsNull(LocalDate.now());
 
+        List<User> usersRecipients =
+            userRepository
+                .findByPermissionListDescription(ROLE);
+
+        mailer.warnAboutExpiredReleases(expireds, usersRecipients);
     }
 
 	private void validatePerson(final Release release) {
