@@ -10,6 +10,8 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -29,12 +31,13 @@ import java.util.*;
 @Service
 public class ReleaseService {
 
-	private ReleaseRepository repository;
-	private PersonRepository personRepository;
-	private UserRepository userRepository;
-	private ReleasesMailer mailer;
+    private static final String ROLE = "ROLE_SEARCH_RELEASE";
+    private Logger logger = LoggerFactory.getLogger(ReleaseService.class);
 
-	private static final String ROLE = "ROLE_SEARCH_RELEASE";
+    private ReleaseRepository repository;
+    private PersonRepository personRepository;
+    private UserRepository userRepository;
+    private ReleasesMailer mailer;
 
     @Autowired
     public ReleaseService(
@@ -94,15 +97,32 @@ public class ReleaseService {
 
     @Scheduled(cron = "0 0 6 * * *")
     public void warnExpiredReleases() {
+        if (logger.isDebugEnabled())
+            logger.debug("Warning expired releases by e-mail.");
+
         List<Release> expireds =
             repository
                 .findByDueDateLessThanEqualAndPayDateIsNull(LocalDate.now());
+
+        if (expireds.isEmpty()) {
+            logger.info("No expired releases to warn by e-mail");
+            return;
+        }
+
+        logger.info("There are {} expired releases to warn by e-mail", expireds.size());
 
         List<User> usersRecipients =
             userRepository
                 .findByPermissionListDescription(ROLE);
 
+        if (usersRecipients.isEmpty()) {
+            logger.warn("There are expired releases but, there aren't user recipients to send.");
+            return;
+        }
+
         mailer.warnAboutExpiredReleases(expireds, usersRecipients);
+
+        logger.info("Email sent successfully.");
     }
 
 	private void validatePerson(final Release release) {
