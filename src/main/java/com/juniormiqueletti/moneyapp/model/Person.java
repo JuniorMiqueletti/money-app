@@ -1,16 +1,14 @@
 package com.juniormiqueletti.moneyapp.model;
 
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Cascade;
+
+import java.util.List;
 
 @Entity
 @Table(name = "person")
@@ -29,6 +27,10 @@ public class Person {
 
 	@NotNull
 	private boolean active;
+
+    @Valid
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
+    private List<Contact> contacts;
 
 	public Long getId() {
 		return id;
@@ -62,7 +64,15 @@ public class Person {
 		this.active = active;
 	}
 
-	@Override
+    public List<Contact> getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(List<Contact> contacts) {
+        this.contacts = contacts;
+    }
+
+    @Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
