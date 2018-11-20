@@ -1,5 +1,8 @@
 package com.juniormiqueletti.moneyapp.resource;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -33,6 +36,7 @@ import com.juniormiqueletti.moneyapp.repository.ReleaseRepository;
 import com.juniormiqueletti.moneyapp.repository.filter.ReleaseFilter;
 import com.juniormiqueletti.moneyapp.service.ReleaseService;
 import com.juniormiqueletti.moneyapp.service.exception.PersonInexistsOrInactiveException;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/release")
@@ -158,6 +162,14 @@ public class ReleaseRS {
                 MediaType.APPLICATION_PDF_VALUE
             )
             .body(report);
+    }
 
+    @PostMapping("/attached")
+    @PreAuthorize("hasAuthority('ROLE_CREATE_RELEASE')")
+    public String uploadFile(@RequestParam MultipartFile file) throws IOException {
+        OutputStream outputStream = new FileOutputStream("/attached--" + file.getOriginalFilename());
+        outputStream.write(file.getBytes());
+        outputStream.close();
+        return "Ok";
     }
 }
