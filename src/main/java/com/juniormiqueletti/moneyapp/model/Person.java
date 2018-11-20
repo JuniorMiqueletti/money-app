@@ -6,6 +6,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cascade;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class Person {
 	@NotNull
 	private boolean active;
 
+	@JsonIgnoreProperties("person")
     @Valid
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
     private List<Contact> contacts;
