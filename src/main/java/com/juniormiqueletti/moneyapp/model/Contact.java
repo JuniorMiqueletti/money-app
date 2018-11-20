@@ -23,7 +23,6 @@ public class Contact {
     @NotEmpty
     private String phoneNumber;
 
-    @NotNull
     @ManyToOne
     @JoinColumn(name = "id_person")
     private Person person;

@@ -60,7 +60,7 @@ public class PersonRS {
 	@PreAuthorize("hasAuthority('ROLE_CREATE_PERSON')")
 	public ResponseEntity<Person> create(@Valid @RequestBody Person person, HttpServletResponse response) {
 
-		Person created = repo.save(person);
+		Person created = service.save(person);
 
 		publisher.publishEvent(new ResourceCreatedEvent(this, response, created.getId()));
 
