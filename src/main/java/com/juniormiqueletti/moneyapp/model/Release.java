@@ -1,6 +1,7 @@
 package com.juniormiqueletti.moneyapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -51,6 +52,7 @@ public class Release {
 	@NotNull
 	private Category category;
 
+	@JsonIgnoreProperties("contacts")
 	@ManyToOne
 	@JoinColumn(name = "id_person")
 	@NotNull
