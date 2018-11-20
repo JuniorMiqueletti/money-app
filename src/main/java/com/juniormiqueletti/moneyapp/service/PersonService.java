@@ -22,12 +22,14 @@ public class PersonService {
 
     public Person update(final Long id, final Person person) {
 
-		Person savedPerson = findPersonById(id); 
-		BeanUtils.copyProperties(person, savedPerson, "id");
+		Person savedPerson = findPersonById(id);
 
-        person.getContacts().forEach(c -> c.setPerson(person));
+		savedPerson.getContacts().clear();
+		savedPerson.setContacts(person.getContacts());
+        savedPerson.getContacts().forEach(c -> c.setPerson(savedPerson));
 
-		return repository.save(savedPerson);
+        BeanUtils.copyProperties(person, savedPerson, "id", "contacts");
+        return repository.save(savedPerson);
 	}
 
 	public void updatePropertyActive(final Long id, final Boolean active) {
