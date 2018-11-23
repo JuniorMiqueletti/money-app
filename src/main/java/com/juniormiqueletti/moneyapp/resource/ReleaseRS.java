@@ -15,6 +15,7 @@ import javax.validation.Valid;
 import com.juniormiqueletti.moneyapp.dto.StatisticalReleaseCategory;
 import com.juniormiqueletti.moneyapp.dto.StatisticalReleaseDaily;
 import com.juniormiqueletti.moneyapp.repository.projection.ReleaseSummary;
+import com.juniormiqueletti.moneyapp.storage.AmazonS3Storage;
 import net.sf.jasperreports.engine.JRException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -46,18 +47,21 @@ public class ReleaseRS {
 	private ReleaseService service;
 	private ApplicationEventPublisher publisher;
 	private MessageSource ms;
+	private AmazonS3Storage s3;
 
     @Autowired
     public ReleaseRS(
-        ReleaseRepository repository,
-        ReleaseService service,
-        ApplicationEventPublisher publisher,
-        MessageSource ms
+        final ReleaseRepository repository,
+        final ReleaseService service,
+        final ApplicationEventPublisher publisher,
+        final MessageSource ms,
+        final AmazonS3Storage s3
     ) {
         this.repository = repository;
         this.service = service;
         this.publisher = publisher;
         this.ms = ms;
+        this.s3 = s3;
     }
 
     @GetMapping
@@ -167,9 +171,7 @@ public class ReleaseRS {
     @PostMapping("/attached")
     @PreAuthorize("hasAuthority('ROLE_CREATE_RELEASE')")
     public String uploadFile(@RequestParam MultipartFile file) throws IOException {
-        OutputStream outputStream = new FileOutputStream("/attached--" + file.getOriginalFilename());
-        outputStream.write(file.getBytes());
-        outputStream.close();
-        return "Ok";
+
+        return s3.saveTemporaty(file);
     }
 }
