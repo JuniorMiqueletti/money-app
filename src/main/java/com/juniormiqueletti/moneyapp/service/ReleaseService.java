@@ -31,7 +31,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
 
-import static org.springframework.util.StringUtils.hasText;
+import static org.springframework.util.StringUtils.*;
 
 @Service
 public class ReleaseService {
@@ -81,6 +81,14 @@ public class ReleaseService {
 		if (!release.getPerson().equals(releaseSaved.getPerson())) {
 			validatePerson(release);
 		}
+
+		if (isEmpty(release.getAttachment()) && hasText(releaseSaved.getAttachment())) {
+            s3Storage.remove(releaseSaved.getAttachment());
+
+		} else if (hasLength(release.getAttachment())
+            && !release.getAttachment().equals(releaseSaved.getAttachment())) {
+            s3Storage.replace(releaseSaved.getAttachment(), release.getAttachment());
+        }
 
 		BeanUtils.copyProperties(release, releaseSaved, "id");
 
