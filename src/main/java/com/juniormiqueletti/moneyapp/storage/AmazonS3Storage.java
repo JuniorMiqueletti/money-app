@@ -60,6 +60,11 @@ public class AmazonS3Storage {
         }
     }
 
+    public String configUrl(final String s3Object) {
+        return "\\\\" + property.getS3().getBucket() + "s3.amazon.aws" + s3Object;
+
+    }
+
     private String generateUniqueName(final String filename) {
         return UUID.randomUUID().toString() + "_" + filename;
     }

@@ -1,8 +1,6 @@
 package com.juniormiqueletti.moneyapp.resource;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -12,6 +10,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import com.juniormiqueletti.moneyapp.dto.Attached;
 import com.juniormiqueletti.moneyapp.dto.StatisticalReleaseCategory;
 import com.juniormiqueletti.moneyapp.dto.StatisticalReleaseDaily;
 import com.juniormiqueletti.moneyapp.repository.projection.ReleaseSummary;
@@ -29,6 +28,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.juniormiqueletti.moneyapp.event.ResourceCreatedEvent;
 import com.juniormiqueletti.moneyapp.exceptionhandler.MoneyAppExceptionHandler.Error;
@@ -37,7 +37,6 @@ import com.juniormiqueletti.moneyapp.repository.ReleaseRepository;
 import com.juniormiqueletti.moneyapp.repository.filter.ReleaseFilter;
 import com.juniormiqueletti.moneyapp.service.ReleaseService;
 import com.juniormiqueletti.moneyapp.service.exception.PersonInexistsOrInactiveException;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/release")
@@ -169,9 +168,9 @@ public class ReleaseRS {
     }
 
     @PostMapping("/attached")
-    @PreAuthorize("hasAuthority('ROLE_CREATE_RELEASE')")
-    public String uploadFile(@RequestParam MultipartFile file) throws IOException {
-
-        return s3.saveTemporaty(file);
+    @PreAuthorize("hasAuthority('ROLE_CREATE_RELEASE') and #oauth2.hasScope('write')")
+    public Attached uploadFile(@RequestParam MultipartFile file) throws IOException {
+        String fileName = s3.saveTemporaty(file);
+        return new Attached(fileName, s3.configUrl(fileName));
     }
 }
