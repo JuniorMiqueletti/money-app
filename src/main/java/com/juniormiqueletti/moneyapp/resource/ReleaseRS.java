@@ -10,7 +10,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import com.juniormiqueletti.moneyapp.dto.Attached;
+import com.juniormiqueletti.moneyapp.dto.Attachment;
 import com.juniormiqueletti.moneyapp.dto.StatisticalReleaseCategory;
 import com.juniormiqueletti.moneyapp.dto.StatisticalReleaseDaily;
 import com.juniormiqueletti.moneyapp.repository.projection.ReleaseSummary;
@@ -167,10 +167,10 @@ public class ReleaseRS {
             .body(report);
     }
 
-    @PostMapping("/attached")
+    @PostMapping("/attach")
     @PreAuthorize("hasAuthority('ROLE_CREATE_RELEASE') and #oauth2.hasScope('write')")
-    public Attached uploadFile(@RequestParam MultipartFile file) throws IOException {
+    public Attachment uploadFile(@RequestParam MultipartFile file) throws IOException {
         String fileName = s3.saveTemporaty(file);
-        return new Attached(fileName, s3.configUrl(fileName));
+        return new Attachment(fileName, s3.configUrl(fileName));
     }
 }

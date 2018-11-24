@@ -1,11 +1,11 @@
 package com.juniormiqueletti.moneyapp.dto;
 
-public class Attached {
+public class Attachment {
 
     private String name;
     private String Url;
 
-    public Attached(String name, String url) {
+    public Attachment(String name, String url) {
         this.name = name;
         Url = url;
     }
