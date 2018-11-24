@@ -2,6 +2,7 @@ package com.juniormiqueletti.moneyapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.juniormiqueletti.moneyapp.repository.listener.ReleaseAttachmentListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -10,6 +11,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+@EntityListeners(ReleaseAttachmentListener.class)
 @Entity
 @Table(name = "releases")
 public class Release {
