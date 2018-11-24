@@ -12,6 +12,7 @@ import com.amazonaws.services.s3.model.Tag;
 import com.amazonaws.services.s3.model.lifecycle.LifecycleFilter;
 import com.amazonaws.services.s3.model.lifecycle.LifecycleTagPredicate;
 import com.juniormiqueletti.moneyapp.config.property.MoneyApiProperty;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -26,6 +27,11 @@ public class AmazonS3Config {
     private static final String TRUE = "true";
 
     private MoneyApiProperty property;
+
+    @Autowired
+    public AmazonS3Config(final MoneyApiProperty property) {
+        this.property = property;
+    }
 
     @Bean
     public AmazonS3 amazonS3() {
