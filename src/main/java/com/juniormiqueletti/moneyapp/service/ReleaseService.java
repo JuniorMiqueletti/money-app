@@ -1,10 +1,12 @@
 package com.juniormiqueletti.moneyapp.service;
 
+import com.amazonaws.services.s3.AmazonS3;
 import com.juniormiqueletti.moneyapp.dto.StatisticalReleasePerson;
 import com.juniormiqueletti.moneyapp.mail.Mailer;
 import com.juniormiqueletti.moneyapp.mail.ReleasesMailer;
 import com.juniormiqueletti.moneyapp.model.User;
 import com.juniormiqueletti.moneyapp.repository.UserRepository;
+import com.juniormiqueletti.moneyapp.storage.AmazonS3Storage;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -22,11 +24,14 @@ import com.juniormiqueletti.moneyapp.model.Release;
 import com.juniormiqueletti.moneyapp.repository.PersonRepository;
 import com.juniormiqueletti.moneyapp.repository.ReleaseRepository;
 import com.juniormiqueletti.moneyapp.service.exception.PersonInexistsOrInactiveException;
+import org.springframework.util.StringUtils;
 
 import java.io.InputStream;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
+
+import static org.springframework.util.StringUtils.hasText;
 
 @Service
 public class ReleaseService {
@@ -38,18 +43,21 @@ public class ReleaseService {
     private PersonRepository personRepository;
     private UserRepository userRepository;
     private ReleasesMailer mailer;
+    private AmazonS3Storage s3Storage;
 
     @Autowired
     public ReleaseService(
         ReleaseRepository repository,
         PersonRepository personRepository,
         UserRepository userRepository,
-        ReleasesMailer mailer
+        ReleasesMailer mailer,
+        AmazonS3Storage s3Storage
     ) {
         this.repository = repository;
         this.personRepository = personRepository;
         this.userRepository = userRepository;
         this.mailer = mailer;
+        this.s3Storage = s3Storage;
     }
 
     public Release save(final Release release) {
@@ -57,6 +65,9 @@ public class ReleaseService {
 
 		if (!person.isPresent() || person.get().isInactive())
 			throw new PersonInexistsOrInactiveException();
+
+		if (hasText(release.getAttachment()))
+		    s3Storage.save(release.getAttachment());
 
 		return repository.save(release);
 	}

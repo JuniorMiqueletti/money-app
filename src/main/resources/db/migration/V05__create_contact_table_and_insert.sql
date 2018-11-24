@@ -7,4 +7,5 @@ CREATE TABLE contact (
     FOREIGN KEY (id_person) REFERENCES person(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-insert into contact (id, id_person, name, email, phone_number) values (1, 1, 'Junior Contact', 'contact@gmail.com', '44 99998-6889');
+insert into contact (id, id_person, name, email, phone_number)
+values (1, 1, 'Junior Contact', 'contact@gmail.com', '44 99998-6889');

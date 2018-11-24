@@ -11,7 +11,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.UUID;
+
+import static java.util.Collections.emptyList;
 
 @Component
 public class AmazonS3Storage {
@@ -63,6 +66,17 @@ public class AmazonS3Storage {
     public String configUrl(final String s3Object) {
         return "\\\\" + property.getS3().getBucket() + "s3.amazon.aws" + s3Object;
 
+    }
+
+    public void save(final String attachment) {
+        SetObjectTaggingRequest setObjectTaggingRequest =
+            new SetObjectTaggingRequest(
+                property.getS3().getBucket(),
+                attachment,
+                new ObjectTagging(emptyList())
+            );
+
+        amazonS3.setObjectTagging(setObjectTaggingRequest);
     }
 
     private String generateUniqueName(final String filename) {

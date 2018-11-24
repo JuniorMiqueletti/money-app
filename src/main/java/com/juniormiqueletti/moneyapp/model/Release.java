@@ -6,16 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -62,6 +53,11 @@ public class Release {
 	public Boolean isRecipe() {
 	    return this.type.RECIPE.equals(this.type);
     }
+
+    private String attachment;
+
+	@Transient
+	private String attachedmentUrl;
 
 	public Long getId() {
 		return id;
@@ -135,7 +131,23 @@ public class Release {
 		this.person = person;
 	}
 
-	@Override
+    public String getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(String attachment) {
+        this.attachment = attachment;
+    }
+
+    public String getAttachedmentUrl() {
+        return attachedmentUrl;
+    }
+
+    public void setAttachedmentUrl(String attachedmentUrl) {
+        this.attachedmentUrl = attachedmentUrl;
+    }
+
+    @Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
