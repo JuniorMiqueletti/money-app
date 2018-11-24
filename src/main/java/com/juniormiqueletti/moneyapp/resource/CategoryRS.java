@@ -24,7 +24,7 @@ import com.juniormiqueletti.moneyapp.model.Category;
 import com.juniormiqueletti.moneyapp.repository.CategoryRepository;
 
 @RestController
-@RequestMapping("/category")
+@RequestMapping("/api/v1/category")
 public class CategoryRS {
 
 	private CategoryRepository repo;

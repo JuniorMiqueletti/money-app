@@ -39,7 +39,7 @@ import com.juniormiqueletti.moneyapp.service.ReleaseService;
 import com.juniormiqueletti.moneyapp.service.exception.PersonInexistsOrInactiveException;
 
 @RestController
-@RequestMapping("/release")
+@RequestMapping("/api/v1/release")
 public class ReleaseRS {
 
 	private ReleaseRepository repository;

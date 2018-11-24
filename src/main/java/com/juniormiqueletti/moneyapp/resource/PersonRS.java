@@ -29,7 +29,7 @@ import com.juniormiqueletti.moneyapp.service.PersonService;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/person")
+@RequestMapping("/api/v1/person")
 public class PersonRS {
 
 	private PersonRepository repo;
