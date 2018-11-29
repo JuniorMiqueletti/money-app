@@ -62,7 +62,12 @@
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
-		<dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
@@ -179,10 +184,7 @@
                 <version>2.22.1</version>
                 <configuration>
                     <parallel>methods</parallel>
-                    <threadCount>1</threadCount>
-                    <argLine>
-                        --illegal-access=permit
-                    </argLine>
+                    <threadCount>10</threadCount>
                 </configuration>
             </plugin>
             <plugin>
