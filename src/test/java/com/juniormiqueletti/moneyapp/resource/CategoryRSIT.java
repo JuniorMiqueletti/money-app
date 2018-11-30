@@ -4,17 +4,15 @@ import io.restassured.http.Header;
 import io.restassured.response.Response;
 import org.junit.Test;
 
-import java.util.Base64;
-
 import static io.restassured.RestAssured.given;
 import static org.junit.Assert.assertEquals;
 
-public class CategoryRSIT {
+public class CategoryRSIT extends AuthenticableTest {
 
-    private static final String URL_OAUTH = "/oauth/token";
     private static final String CONTENT_TYPE_HEADER = "Content-Type";
     private static final String APPLICATION_JSON = "application/json";
     private static final int UNAUTHORIZED_HTTP_STATUS_CODE = 401;
+    private static final int OK_HTTP_STATUS_CODE = 200;
     private static final String CATEGORY_URL = "/api/v1/category";
 
     @Test
@@ -33,22 +31,19 @@ public class CategoryRSIT {
         assertEquals(errorDescription, "Full authentication is required to access this resource");
     }
 
-    private Response requestToken(final String username, final String password) {
+    @Test
+    public void requestACategory() {
 
-        String clientBasicAuthCredentials =
-            Base64.getEncoder().encodeToString("angular:@ngul@r".getBytes());
+        Header authenticationHeader = getAuthenticationHeader();
 
         Response response =
             given()
-                .header(new Header("Authorization", "Basic " + clientBasicAuthCredentials))
-                .queryParam("username", username)
-                .queryParam("password", password)
-                .queryParam("grant_type", "password")
-            .when()
-                .post(URL_OAUTH)
-            .then()
-                .extract().response();
+                .header("Accept", APPLICATION_JSON)
+                .header(CONTENT_TYPE_HEADER, APPLICATION_JSON)
+                .header(authenticationHeader)
+                .get(CATEGORY_URL + "/1")
+                .thenReturn();
 
-        return response;
+        assertEquals(OK_HTTP_STATUS_CODE, response.getStatusCode());
     }
 }
