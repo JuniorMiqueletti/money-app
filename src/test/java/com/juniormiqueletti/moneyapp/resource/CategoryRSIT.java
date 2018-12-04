@@ -18,7 +18,7 @@ public class CategoryRSIT extends AuthenticableTest {
     private static final String CATEGORY_URL = "/api/v1/category";
 
     @Test
-    public void requestCategoryWithoutToken() {
+    public void getCategoryWithoutToken() {
 
         Response response =
             given()
@@ -34,7 +34,7 @@ public class CategoryRSIT extends AuthenticableTest {
     }
 
     @Test
-    public void requestAExistedCategory_shouldReturnOk() {
+    public void getAExistedCategory_shouldReturnOk() {
 
         Header authenticationHeader = getAuthenticationHeader();
 
@@ -50,7 +50,7 @@ public class CategoryRSIT extends AuthenticableTest {
     }
 
     @Test
-    public void requestACategoryNotFound_shouldReturnAStatusNotFound() {
+    public void getACategoryNotFound_shouldReturnAStatusNotFound() {
 
         Header authenticationHeader = getAuthenticationHeader();
 
@@ -63,5 +63,20 @@ public class CategoryRSIT extends AuthenticableTest {
                 .thenReturn();
 
         assertEquals(NOT_FOUND.value(), response.getStatusCode());
+    }
+
+    @Test
+    public void getAllCategories_shouldReturnStatusOk() {
+        Header authenticationHeader = getAuthenticationHeader();
+
+        Response response =
+            given()
+                .header("Accept", APPLICATION_JSON)
+                .header(CONTENT_TYPE_HEADER, APPLICATION_JSON)
+                .header(authenticationHeader)
+            .get(CATEGORY_URL)
+                .thenReturn();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatusCode());
     }
 }
