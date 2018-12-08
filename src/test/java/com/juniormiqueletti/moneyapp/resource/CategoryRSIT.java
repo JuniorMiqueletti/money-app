@@ -6,8 +6,7 @@ import io.restassured.response.Response;
 import org.junit.Test;
 
 import static io.restassured.RestAssured.given;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.springframework.http.HttpStatus.*;
 
 public class CategoryRSIT extends AuthenticableTest {
@@ -101,7 +100,11 @@ public class CategoryRSIT extends AuthenticableTest {
 
         assertEquals(CREATED.value(), response.getStatusCode());
         String location = response.getHeader(LOCATION_HEADER);
-
         assertTrue(location.matches(LOCATION_PATTERN));
+
+        Category categoryResponse = response.getBody().as(Category.class);
+
+        assertEquals(category2Create.getName(), categoryResponse.getName());
+        assertNotNull(categoryResponse.getId());
     }
 }

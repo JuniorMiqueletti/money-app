@@ -23,19 +23,21 @@ import com.juniormiqueletti.moneyapp.event.ResourceCreatedEvent;
 import com.juniormiqueletti.moneyapp.model.Category;
 import com.juniormiqueletti.moneyapp.repository.CategoryRepository;
 
+import static org.springframework.http.HttpStatus.CREATED;
+
 @RestController
 @RequestMapping("/api/v1/category")
 public class CategoryRS {
 
-	private CategoryRepository repo;
+	private CategoryRepository repository;
 	private ApplicationEventPublisher publisher;
 
 	@Autowired
     public CategoryRS(
-        CategoryRepository repo,
+        CategoryRepository repository,
         ApplicationEventPublisher publisher
     ) {
-        this.repo = repo;
+        this.repository = repository;
         this.publisher = publisher;
     }
 
@@ -43,27 +45,27 @@ public class CategoryRS {
 	@PreAuthorize("hasAuthority('ROLE_CREATE_CATEGORY')")
 	public List<Category> listAll() {
 
-		List<Category> categories = repo.findAll();
+		List<Category> categories = repository.findAll();
 		return categories;
 	}
 
 	@PostMapping
-	@ResponseStatus(code = HttpStatus.CREATED)
+	@ResponseStatus(code = CREATED)
 	@PreAuthorize("hasAuthority('ROLE_CREATE_CATEGORY')")
 	public ResponseEntity<Category> create(@Valid @RequestBody Category category, HttpServletResponse response) {
 
-		Category created = repo.save(category);
+		Category created = repository.save(category);
 
 		publisher.publishEvent(new ResourceCreatedEvent(this, response, created.getId()));
 
-		return ResponseEntity.status(HttpStatus.CREATED).body(created);
+		return ResponseEntity.status(CREATED).body(created);
 	}
 
 	@GetMapping("/{id}")
 	@PreAuthorize("hasAuthority('ROLE_SEARCH_CATEGORY')")
 	public ResponseEntity<Category> findById(@PathVariable Long id) {
 
-		Optional<Category> category = repo.findById(id);
+		Optional<Category> category = repository.findById(id);
 
 		if (!category.isPresent())
 			return ResponseEntity.notFound().build();
